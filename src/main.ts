@@ -82,23 +82,27 @@ class TranscriptManager {
                 }
                 const style = w.document.createElement("style");
                 style.textContent = `
-    body {
-        margin: 0;
-    }
-    .transcriptInterface {
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-    }
-    .transcriptInterface .transcript-box {
-        overflow-y: auto;
-        padding: 0;
-    }
-    .transcriptInterface .transcript-body {
-        overflow: unset;
-        overflow-y: auto;
-    }
-    `;
+body {
+    margin: 0;
+}
+.transcriptInterface {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.transcriptInterface .transcript-box {
+    overflow-y: auto;
+    padding: 0;
+}
+.transcriptInterface .transcript-body {
+    overflow: unset;
+    overflow-y: auto;
+}
+.transcriptInterface .transcription-time-part {
+    display: block;
+    border-bottom: 1px solid #EEEEEE;
+}
+`;
                 w.document.head.append(style);
                 const transcriptBody = this.transcriptEl.querySelector(".transcript-body") as HTMLElement;
                 transcriptBody.style.minHeight = transcriptBody.style.height;
