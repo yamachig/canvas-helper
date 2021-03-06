@@ -55,6 +55,9 @@ class TranscriptManager {
             const transcriptBody = this.transcriptEl.querySelector(".transcript-body") as HTMLElement;
             transcriptBody.style.height = transcriptBody.style.minHeight;
             transcriptBody.style.minHeight = "";
+
+            const transcriptBox = this.transcriptEl.querySelector(".transcript-box") as HTMLElement;
+            transcriptBox.style.display = "block";
             this.detached = false;
             this.toggleDetachButton();
             if(this.window) {
@@ -93,10 +96,13 @@ body {
 .transcriptInterface .transcript-box {
     overflow-y: auto;
     padding: 0;
+    flex: 1 0 0;
 }
 .transcriptInterface .transcript-body {
     overflow: unset;
     overflow-y: auto;
+    flex: 1 0 0;
+    scroll-behavior: smooth;
 }
 .transcriptInterface .transcription-time-part {
     display: block;
@@ -107,6 +113,9 @@ body {
                 const transcriptBody = this.transcriptEl.querySelector(".transcript-body") as HTMLElement;
                 transcriptBody.style.minHeight = transcriptBody.style.height;
                 transcriptBody.style.height = "auto";
+
+                const transcriptBox = this.transcriptEl.querySelector(".transcript-box") as HTMLElement;
+                transcriptBox.style.display = "flex";
         
                 this.detached = true;
                 this.toggleDetachButton();
