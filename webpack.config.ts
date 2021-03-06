@@ -59,7 +59,10 @@ const config: webpack.Configuration = {
                 ],
             },
             {
-                test: /manifest.json$/,
+                test: [
+                    /manifest\.json$/, 
+                    /\.png$/,
+                ],
                 type: "asset/resource",
                 generator: {
                     filename: "[name][ext][query]",

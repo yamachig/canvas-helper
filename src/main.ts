@@ -1,4 +1,7 @@
 import "./manifest.json";
+import "./16.png";
+import "./48.png";
+import "./128.png";
 
 class TranscriptManager {
     private transcriptWrapperEl: HTMLElement;
