@@ -48,8 +48,7 @@ class TranscriptManager {
         this.detachButton.text = this.detached ? "merge to parent window" : "detach";
     }
 
-    private detachButtonClick: () => void;
-    private _detachButtonClick() {
+    private directDetach() {
         if(this.detached) {
             this.transcriptEl.remove();
             this.transcriptWrapperEl.append(this.transcriptEl);
@@ -57,49 +56,66 @@ class TranscriptManager {
             transcriptBody.style.height = transcriptBody.style.minHeight;
             transcriptBody.style.minHeight = "";
             this.detached = false;
+            this.toggleDetachButton();
             if(this.window) {
                 this.window.close();
                 this.window = null;
             }
         } else {
-            this.window = window.open("", this.windowID, "resizable");
+            this.window = window.open(window.location.href, this.windowID, "resizable");
             if(!this.window) return;
-            this.transcriptEl.remove();
-            this.window.document.body.append(this.transcriptEl);
-            const showButton = this.transcriptEl.querySelector(".toggleTranscriptBodyWrapper") as HTMLElement;
-            if(showButton.classList.contains("close")) {
-                showButton.click();
-            }
-            const style = this.window.document.createElement("style");
-            style.textContent = `
-body {
-    margin: 0;
-}
-.transcriptInterface {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-.transcriptInterface .transcript-box {
-    overflow-y: auto;
-    padding: 0;
-}
-.transcriptInterface .transcript-body {
-    overflow: unset;
-    overflow-y: auto;
-}
-`;
-            this.window.document.head.append(style);
-            const transcriptBody = this.transcriptEl.querySelector(".transcript-body") as HTMLElement;
-            transcriptBody.style.minHeight = transcriptBody.style.height;
-            transcriptBody.style.height = "auto";
-
-            this.detached = true;
-            this.window.addEventListener("beforeunload", () => {
-                if(this.detached) this.detachButtonClick();
-            });
+            const w = this.window;
+            const timer = setInterval(() => {
+                try {
+                    while(w.document.body.firstChild) {
+                        w.document.body.removeChild(w.document.body.firstChild);
+                    }
+                    clearInterval(timer);
+                } catch {
+                    return;
+                }
+                this.transcriptEl.remove();
+                w.document.body.append(this.transcriptEl);
+                const showButton = this.transcriptEl.querySelector(".toggleTranscriptBodyWrapper") as HTMLElement;
+                if(showButton.classList.contains("close")) {
+                    showButton.click();
+                }
+                const style = w.document.createElement("style");
+                style.textContent = `
+    body {
+        margin: 0;
+    }
+    .transcriptInterface {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    .transcriptInterface .transcript-box {
+        overflow-y: auto;
+        padding: 0;
+    }
+    .transcriptInterface .transcript-body {
+        overflow: unset;
+        overflow-y: auto;
+    }
+    `;
+                w.document.head.append(style);
+                const transcriptBody = this.transcriptEl.querySelector(".transcript-body") as HTMLElement;
+                transcriptBody.style.minHeight = transcriptBody.style.height;
+                transcriptBody.style.height = "auto";
+        
+                this.detached = true;
+                this.toggleDetachButton();
+                w.addEventListener("beforeunload", () => {
+                    if(this.detached) this.directDetach();
+                });
+            }, 1000);
         }
-        this.toggleDetachButton();
+    }
+
+    private detachButtonClick: () => void;
+    private _detachButtonClick() {
+        this.directDetach();
     }
 }
 
@@ -112,6 +128,8 @@ const activate = () => {
 };
 
 const onLoad = () => {
-    activate();
+    setTimeout(() => {
+        activate();
+    }, 2000);
 };
 window.addEventListener("load", onLoad);

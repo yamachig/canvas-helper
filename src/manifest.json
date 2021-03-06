@@ -1,6 +1,6 @@
 {
     "name": "canvas-transcript-detacher",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Detach transcript on Canvas Media Gallery",
     "manifest_version": 2,
     "permissions": [
